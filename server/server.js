@@ -9,13 +9,14 @@ async function startServer() {
     await connectDb();
     await seed();
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
+      const dbName = process.env.MONGODB_DB_NAME || 'grand_horizon_hotel';
       console.log('=======================================================');
       console.log(' Grand Horizon Hotel Management & Booking Platform');
-      console.log(` Running on: http://localhost:${PORT}`);
-      console.log(` Interactive API Docs: http://localhost:${PORT}/api/docs`);
+      console.log(` Listening on port: ${PORT}`);
+      console.log(` Local URL: http://localhost:${PORT}`);
       console.log(` Health Check: http://localhost:${PORT}/api/health`);
-      console.log(' Database: MongoDB (127.0.0.1:27017)');
+      console.log(` Database: MongoDB (${dbName})`);
       console.log('=======================================================');
     });
   } catch (err) {

@@ -37,11 +37,12 @@ app.use((req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   const host = (req.headers.host || '').split(':')[0].toLowerCase();
-  const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '';
+  const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '' || host.startsWith('10.') || host.endsWith('.internal');
   const forwardedProto = req.headers['x-forwarded-proto'];
   const forceHttps = process.env.FORCE_HTTPS === 'true';
 
-  if (forwardedProto === 'http' || (forceHttps && !req.secure && !isLocalHost)) {
+  // Exempt internal container health checks from HTTPS redirect
+  if (req.path !== '/api/health' && (forwardedProto === 'http' || (forceHttps && !req.secure && !isLocalHost))) {
     return res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
   }
 

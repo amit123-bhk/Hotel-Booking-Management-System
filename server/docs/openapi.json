@@ -1,0 +1,260 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Grand Horizon Luxury Hotel Management & Booking API",
+    "version": "1.0.0",
+    "description": "Production-grade RESTful API for Grand Horizon Luxury Hotel & Resort. Supports room and rate administration, concurrency-safe availability searches, temporary holds, idempotent simulated payments, front desk workflows (check-in/check-out), operations analytics, and audit logging."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development and evaluation server"
+    }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "User authentication, registration, session inspection, and demo role switcher" },
+    { "name": "Availability & Search", "description": "Date range validation and concurrency-safe room availability search" },
+    { "name": "Bookings & Workflow", "description": "10-minute holds, idempotent confirmations, check-in, check-out, and cancellations" },
+    { "name": "Rooms & Inventory", "description": "Room types, amenities, individual room inventory, and housekeeping status" },
+    { "name": "Operations & Reports", "description": "Occupancy rates, RevPAR, ADR, revenue summaries, and arrivals/departures" },
+    { "name": "Audit Trail", "description": "Immutable audit trail of material business actions" }
+  ],
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Authenticate user with email and password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "example": "admin@grandhorizon.com" },
+                  "password": { "type": "string", "example": "Admin123!" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Authentication successful, returns JWT bearer token" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/api/auth/demo-switch": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Instant demo role switcher (Evaluator convenience)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": { "type": "string", "enum": ["ADMIN", "STAFF", "GUEST"], "example": "ADMIN" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Switched demo user and generated auth token" }
+        }
+      }
+    },
+    "/api/bookings/search": {
+      "get": {
+        "tags": ["Availability & Search"],
+        "summary": "Search available room types for given date range and guest count",
+        "parameters": [
+          { "name": "check_in", "in": "query", "required": true, "schema": { "type": "string", "format": "date", "example": "2026-11-15" } },
+          { "name": "check_out", "in": "query", "required": true, "schema": { "type": "string", "format": "date", "example": "2026-11-18" } },
+          { "name": "adults", "in": "query", "schema": { "type": "integer", "default": 2 } },
+          { "name": "children", "in": "query", "schema": { "type": "integer", "default": 0 } },
+          { "name": "room_type_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "List of room types with real-time available room counts and price quotes" },
+          "400": { "description": "Invalid date range or past date requested" }
+        }
+      }
+    },
+    "/api/bookings/hold": {
+      "post": {
+        "tags": ["Bookings & Workflow"],
+        "summary": "Place a temporary 10-minute hold on an available room",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["room_type_id", "check_in", "check_out", "guest_name", "guest_email", "guest_phone"],
+                "properties": {
+                  "room_type_id": { "type": "integer", "example": 1 },
+                  "check_in": { "type": "string", "format": "date", "example": "2026-11-15" },
+                  "check_out": { "type": "string", "format": "date", "example": "2026-11-18" },
+                  "num_adults": { "type": "integer", "example": 2 },
+                  "num_children": { "type": "integer", "example": 0 },
+                  "guest_name": { "type": "string", "example": "Jane Doe" },
+                  "guest_email": { "type": "string", "example": "jane.doe@example.com" },
+                  "guest_phone": { "type": "string", "example": "+1 555-0199" },
+                  "selected_add_ons": { "type": "array", "items": { "type": "string" }, "example": ["breakfast", "spa_pass"] },
+                  "special_requests": { "type": "string", "example": "High floor, quiet side" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Room hold created with unique booking reference and expiration timer" },
+          "409": { "description": "No rooms available for requested dates (concurrency conflict)" }
+        }
+      }
+    },
+    "/api/bookings/confirm": {
+      "post": {
+        "tags": ["Bookings & Workflow"],
+        "summary": "Confirm reservation with simulated payment gateway (Idempotent)",
+        "parameters": [
+          { "name": "Idempotency-Key", "in": "header", "schema": { "type": "string" }, "description": "Unique key to ensure idempotent execution on retries" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["booking_reference"],
+                "properties": {
+                  "booking_reference": { "type": "string", "example": "BK-2026-8812" },
+                  "payment_method": { "type": "string", "default": "MOCK_CARD" },
+                  "card_number": { "type": "string", "example": "4242424242424242" },
+                  "card_exp": { "type": "string", "example": "12/28" },
+                  "card_cvv": { "type": "string", "example": "123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Booking confirmed with payment receipt" },
+          "402": { "description": "Payment declined (simulated decline with 4000... card)" },
+          "410": { "description": "Hold has expired" }
+        }
+      }
+    },
+    "/api/bookings/{reference}/check-in": {
+      "post": {
+        "tags": ["Bookings & Workflow"],
+        "summary": "Front desk check-in for confirmed reservation",
+        "parameters": [
+          { "name": "reference", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Guest checked in, room status set to OCCUPIED" },
+          "400": { "description": "Invalid state transition" }
+        }
+      }
+    },
+    "/api/bookings/{reference}/check-out": {
+      "post": {
+        "tags": ["Bookings & Workflow"],
+        "summary": "Front desk check-out for in-house guest",
+        "parameters": [
+          { "name": "reference", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Guest checked out, room status set to CLEANING for housekeeping" }
+        }
+      }
+    },
+    "/api/bookings/{reference}/cancel": {
+      "post": {
+        "tags": ["Bookings & Workflow"],
+        "summary": "Cancel booking and trigger sandbox refund",
+        "parameters": [
+          { "name": "reference", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": { "type": "string", "example": "Change of travel plans" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Booking cancelled, room released, refund processed" }
+        }
+      }
+    },
+    "/api/reports/operations": {
+      "get": {
+        "tags": ["Operations & Reports"],
+        "summary": "Operations dashboard metrics (Occupancy rate, RevPAR, ADR, Revenue, Arrivals, Departures)",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": {
+          "200": { "description": "Comprehensive operations report matching underlying reservation records" }
+        }
+      }
+    },
+    "/api/rooms": {
+      "get": {
+        "tags": ["Rooms & Inventory"],
+        "summary": "List all physical rooms with status and room type details",
+        "responses": {
+          "200": { "description": "List of rooms" }
+        }
+      }
+    },
+    "/api/rooms/{id}/status": {
+      "patch": {
+        "tags": ["Rooms & Inventory"],
+        "summary": "Update physical room housekeeping/maintenance status",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": { "type": "string", "enum": ["AVAILABLE", "OCCUPIED", "CLEANING", "MAINTENANCE", "OUT_OF_ORDER"] },
+                  "notes": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Room status updated" }
+        }
+      }
+    },
+    "/api/audit": {
+      "get": {
+        "tags": ["Audit Trail"],
+        "summary": "View immutable audit logs of material business actions (Admin only)",
+        "responses": {
+          "200": { "description": "List of audit logs" }
+        }
+      }
+    }
+  }
+}

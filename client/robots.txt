@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /rooms
+Allow: /login
+Allow: /privacy
+Allow: /terms
+Disallow: /api/
+Disallow: /front-desk
+Disallow: /housekeeping
+Disallow: /reports
+Disallow: /admin/
+
+Sitemap: /sitemap.xml

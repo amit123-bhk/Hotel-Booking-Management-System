@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grand Horizon Hotel | Oceanfront Reservations in Dona Paula, Goa</title>
+  <meta name="description" content="Book oceanfront rooms, garden villas, and penthouses directly at Grand Horizon Hotel in Dona Paula, Goa. Live room availability, transparent nightly pricing, and instant booking vouchers.">
+  <meta property="og:title" content="Grand Horizon Hotel | Dona Paula, Goa Reservations">
+  <meta property="og:description" content="Reserve directly with transparent nightly rates, 10-minute checkout room holds, and self-service booking management.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/og-preview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Grand Horizon Hotel | Dona Paula, Goa Reservations">
+  <meta name="twitter:description" content="Direct oceanfront room bookings in Goa, live availability, and self-service reservation management.">
+  <meta name="twitter:image" content="/assets/og-preview.jpg">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    (function() {
+      try {
+        if (localStorage.getItem('gh_theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- SKIP TO CONTENT LINK -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- SCROLL PROGRESS BAR -->
+  <div id="scroll-progress-container" aria-hidden="true">
+    <div id="scroll-progress-bar"></div>
+  </div>
+
+  <!-- STICKY HEADER -->
+  <nav id="main-header">
+    <!-- Primary Bar -->
+    <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-3.5 flex items-center justify-between gap-3">
+
+      <!-- Brand Wordmark -->
+      <button type="button" onclick="navigate('landing')" class="text-left flex items-center gap-3 bg-transparent border-0 p-0 cursor-pointer shrink-0">
+        <div class="w-9 h-9 bg-[#14362b] text-white flex items-center justify-center font-mono font-semibold text-sm tracking-tight rounded">
+          GH
+        </div>
+        <div>
+          <span class="text-base font-bold tracking-tight theme-text-primary block leading-tight whitespace-nowrap">Grand Horizon Hotel</span>
+          <span class="text-xs theme-text-secondary block whitespace-nowrap">Dona Paula, Goa</span>
+        </div>
+      </button>
+
+      <!-- Public / Guest Navigation Links -->
+      <div class="hidden lg:flex items-center gap-1.5 shrink-0" id="nav-tabs">
+        <button onclick="navigate('landing')" id="nav-landing" class="nav-link nav-link-active px-3.5 py-2 rounded text-sm whitespace-nowrap">
+          Home
+        </button>
+        <button onclick="navigate('search')" id="nav-search" class="nav-link px-3.5 py-2 rounded text-sm font-medium whitespace-nowrap">
+          Rooms &amp; Booking
+        </button>
+        <button onclick="navigate('my-bookings')" id="nav-my-bookings" class="nav-link px-3.5 py-2 rounded text-sm font-medium whitespace-nowrap">
+          My Bookings
+        </button>
+      </div>
+
+      <!-- Right Controls: Site Search, Dark Mode, Signed-In Account, Auth -->
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <!-- Site Search -->
+        <div class="relative hidden md:block">
+          <label for="site-search-input" class="sr-only">Search rooms, amenities, or FAQ</label>
+          <input type="search" id="site-search-input" oninput="handleSiteSearch(this.value)" onfocus="handleSiteSearch(this.value)" placeholder="Search rooms, FAQ..." autocomplete="off" class="theme-input rounded px-3 py-1.5 text-xs w-36 lg:w-40 xl:w-52">
+          <div id="site-search-results" class="hidden absolute right-0 mt-2 w-80 surface-card rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto p-2 space-y-1"></div>
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <button type="button" id="btn-theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" class="btn-secondary px-3 py-1.5 rounded text-xs hidden sm:inline-flex items-center whitespace-nowrap">
+          Dark Mode
+        </button>
+
+        <!-- Current User Identity Pill (Wide Desktop) -->
+        <div id="user-display" class="hidden xl:flex items-center gap-2 surface-panel rounded px-2.5 py-1.5">
+          <span id="user-role-badge" class="inline-block px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-semibold badge-out-of-order shrink-0">
+            PUBLIC
+          </span>
+          <span id="user-name" class="text-xs font-semibold theme-text-primary max-w-[140px] truncate">Visitor</span>
+        </div>
+
+        <!-- Desktop Auth Controls (Wrapper holds sm visibility so JS .hidden on buttons always wins cleanly) -->
+        <div class="hidden sm:flex items-center">
+          <button onclick="navigate('login')" id="btn-login" class="btn-primary px-3.5 py-1.5 rounded text-xs whitespace-nowrap">
+            Sign In / Register
+          </button>
+          <button onclick="logout()" id="btn-logout" class="btn-secondary px-3.5 py-1.5 rounded text-xs hidden whitespace-nowrap">
+            Sign Out
+          </button>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button type="button" id="btn-mobile-menu" onclick="toggleMobileMenu()" aria-expanded="false" aria-controls="mobile-menu" class="btn-secondary lg:hidden px-3 py-1.5 rounded text-xs whitespace-nowrap">
+          Menu
+        </button>
+      </div>
+    </div>
+
+    <!-- Staff / Admin Operations Secondary Bar (Tablet & Desktop) -->
+    <div id="staff-admin-subnav" class="hidden">
+      <div class="hidden md:flex w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-2.5 subnav-bar items-center justify-between gap-4">
+        <div class="flex items-center gap-4 min-w-0">
+          <span id="admin-subnav-title" class="text-[11px] font-mono font-semibold uppercase tracking-wider theme-text-secondary whitespace-nowrap shrink-0">
+            Operations Workspace
+          </span>
+          <div class="flex items-center gap-1.5 overflow-x-auto">
+            <button onclick="navigate('front-desk')" id="nav-front-desk" class="nav-link px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap hidden">
+              Front Desk
+            </button>
+            <button onclick="navigate('housekeeping')" id="nav-housekeeping" class="nav-link px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap hidden">
+              Housekeeping
+            </button>
+            <button onclick="navigate('reports')" id="nav-reports" class="nav-link px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap hidden">
+              Operations Report
+            </button>
+            <button onclick="navigate('room-admin')" id="nav-room-admin" class="nav-link px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap hidden">
+              Room Admin
+            </button>
+            <button onclick="navigate('audit-logs')" id="nav-audit-logs" class="nav-link px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap hidden">
+              Audit Logs
+            </button>
+          </div>
+        </div>
+        <span id="subnav-user-meta" class="text-[11px] font-mono theme-text-secondary whitespace-nowrap shrink-0">
+          Dona Paula, Goa Property
+        </span>
+      </div>
+    </div>
+
+    <!-- MOBILE MENU DRAWER -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t theme-border px-4 sm:px-6 py-5 space-y-4">
+      <!-- Mobile Site Search -->
+      <div class="relative">
+        <label for="mobile-site-search" class="block text-xs font-semibold theme-text-primary mb-1.5">Site Search</label>
+        <input type="search" id="mobile-site-search" oninput="handleSiteSearch(this.value, 'mobile-search-results')" placeholder="Search rooms, policies, FAQ..." class="theme-input w-full rounded px-3 py-2 text-xs">
+        <div id="mobile-search-results" class="hidden mt-1.5 surface-card rounded p-2 space-y-1 max-h-60 overflow-y-auto"></div>
+      </div>
+
+      <!-- Mobile Links -->
+      <div class="space-y-2" id="mobile-nav-links">
+        <div class="text-[10px] font-mono uppercase tracking-wider theme-text-secondary">Guest Portal</div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+          <button onclick="navigate('landing'); toggleMobileMenu(false)" class="btn-secondary px-3 py-2 rounded text-left">Home</button>
+          <button onclick="navigate('search'); toggleMobileMenu(false)" class="btn-secondary px-3 py-2 rounded text-left">Rooms &amp; Booking</button>
+          <button onclick="navigate('my-bookings'); toggleMobileMenu(false)" class="btn-secondary px-3 py-2 rounded text-left">My Bookings</button>
+        </div>
+
+        <div id="mob-admin-section" class="hidden pt-2 space-y-2">
+          <div class="text-[10px] font-mono uppercase tracking-wider theme-text-secondary">Operations &amp; Admin</div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+            <button onclick="navigate('front-desk'); toggleMobileMenu(false)" id="mob-front-desk" class="btn-secondary px-3 py-2 rounded text-left hidden">Front Desk</button>
+            <button onclick="navigate('housekeeping'); toggleMobileMenu(false)" id="mob-housekeeping" class="btn-secondary px-3 py-2 rounded text-left hidden">Housekeeping</button>
+            <button onclick="navigate('reports'); toggleMobileMenu(false)" id="mob-reports" class="btn-secondary px-3 py-2 rounded text-left hidden">Operations Report</button>
+            <button onclick="navigate('room-admin'); toggleMobileMenu(false)" id="mob-room-admin" class="btn-secondary px-3 py-2 rounded text-left hidden">Room Admin</button>
+            <button onclick="navigate('audit-logs'); toggleMobileMenu(false)" id="mob-audit-logs" class="btn-secondary px-3 py-2 rounded text-left hidden">Audit Logs</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Theme & Auth Controls -->
+      <div class="flex items-center justify-between gap-3 pt-3 border-t theme-border">
+        <button type="button" onclick="toggleTheme()" class="btn-secondary px-3 py-2 rounded text-xs" id="mob-theme-toggle">
+          Dark Mode
+        </button>
+        <button type="button" onclick="navigate('login'); toggleMobileMenu(false)" id="mob-btn-login" class="btn-primary px-4 py-2 rounded text-xs">
+          Sign In / Register
+        </button>
+        <button type="button" onclick="logout(); toggleMobileMenu(false)" id="mob-btn-logout" class="btn-secondary px-4 py-2 rounded text-xs hidden">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN WORKSPACE -->
+  <main id="main-content" tabindex="-1" class="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-8 sm:py-10 focus:outline-none">
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1: LANDING PAGE (/)                                              -->
+    <!-- ===================================================================== -->
+    <section id="view-landing" class="space-y-8">
+
+      <!-- Editorial Split Hero -->
+      <div class="surface-card rounded-lg overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+        <div class="lg:col-span-6 p-6 sm:p-8 lg:p-10 flex flex-col justify-center space-y-6">
+          <div class="space-y-3">
+            <h1 class="text-3xl sm:text-4xl font-bold theme-text-primary tracking-tight leading-tight">
+              Oceanfront Accommodations in Dona Paula, Goa
+            </h1>
+            <p class="text-sm theme-text-secondary leading-relaxed">
+              Grand Horizon Hotel offers 17 rooms and suites across five floors overlooking the Arabian Sea. Reserve directly with transparent nightly pricing, 10-minute checkout room holds, and self-service booking management.
+            </p>
+          </div>
+
+          <div class="pt-1">
+            <button type="button" onclick="navigate('search')" class="btn-primary px-6 py-3 rounded text-sm">
+              Check Room Availability
+            </button>
+          </div>
+
+          <div class="pt-5 border-t theme-border grid grid-cols-3 gap-4 text-xs">
+            <div>
+              <span class="font-mono font-bold text-lg theme-text-primary block">17</span>
+              <span class="theme-text-secondary">Rooms &amp; Villas</span>
+            </div>
+            <div>
+              <span class="font-mono font-bold text-lg theme-text-primary block">15:00</span>
+              <span class="theme-text-secondary">Check-In Time</span>
+            </div>
+            <div>
+              <span class="font-mono font-bold text-lg theme-text-primary block">11:00</span>
+              <span class="theme-text-secondary">Check-Out Time</span>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-6 min-h-[280px] sm:min-h-[380px] surface-panel border-0">
+          <img src="/assets/images/hero.webp" width="1200" height="750" alt="Grand Horizon Hotel oceanfront building facade and courtyard grounds in Dona Paula, Goa, India" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+      <!-- Quick Availability Bar -->
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <div class="mb-5">
+          <h2 class="text-lg font-bold theme-text-primary">Start a Reservation</h2>
+          <p class="text-xs theme-text-secondary mt-1">Select your dates and party size to check live room availability.</p>
+        </div>
+        <form onsubmit="handleLandingSearchSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+          <div>
+            <label for="landing-check-in" class="block text-xs font-semibold theme-text-primary mb-2">Check-In Date</label>
+            <input type="date" id="landing-check-in" required class="theme-input w-full rounded px-3 py-2.5 text-sm font-mono">
+          </div>
+          <div>
+            <label for="landing-check-out" class="block text-xs font-semibold theme-text-primary mb-2">Check-Out Date</label>
+            <input type="date" id="landing-check-out" required class="theme-input w-full rounded px-3 py-2.5 text-sm font-mono">
+          </div>
+          <div>
+            <label for="landing-adults" class="block text-xs font-semibold theme-text-primary mb-2">Adults (13+)</label>
+            <select id="landing-adults" class="theme-input w-full rounded px-3 py-2.5 text-sm">
+              <option value="1">1 Adult</option>
+              <option value="2" selected>2 Adults</option>
+              <option value="3">3 Adults</option>
+              <option value="4">4 Adults</option>
+            </select>
+          </div>
+          <div>
+            <label for="landing-children" class="block text-xs font-semibold theme-text-primary mb-2">Children (0-12)</label>
+            <select id="landing-children" class="theme-input w-full rounded px-3 py-2.5 text-sm">
+              <option value="0" selected>0 Children</option>
+              <option value="1">1 Child</option>
+              <option value="2">2 Children</option>
+            </select>
+          </div>
+          <div>
+            <button type="submit" class="btn-primary w-full py-2.5 px-4 rounded text-sm">
+              Search Rooms
+            </button>
+          </div>
+        </form>
+        <div id="landing-search-error" role="alert" class="hidden form-status-error rounded px-4 py-2.5 text-xs mt-4"></div>
+      </div>
+
+      <!-- Featured Suites Preview -->
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b theme-border pb-4">
+          <div>
+            <h2 class="text-xl font-bold theme-text-primary">Room Categories</h2>
+            <p class="text-xs theme-text-secondary mt-1">Standard weekday nightly rates before occupancy tax and fees.</p>
+          </div>
+          <button type="button" onclick="navigate('search')" class="btn-secondary px-4 py-2 rounded text-xs">
+            View All Availability
+          </button>
+        </div>
+
+        <div id="landing-suites-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Skeleton Loading Placeholders -->
+          <div class="surface-card rounded-lg p-6 space-y-4">
+            <div class="h-44 skeleton-block"></div>
+            <div class="h-4 w-2/3 skeleton-block"></div>
+            <div class="h-3 w-full skeleton-block"></div>
+            <div class="h-8 w-1/2 skeleton-block"></div>
+          </div>
+          <div class="surface-card rounded-lg p-6 space-y-4 hidden md:block">
+            <div class="h-44 skeleton-block"></div>
+            <div class="h-4 w-2/3 skeleton-block"></div>
+            <div class="h-3 w-full skeleton-block"></div>
+            <div class="h-8 w-1/2 skeleton-block"></div>
+          </div>
+          <div class="surface-card rounded-lg p-6 space-y-4 hidden md:block">
+            <div class="h-44 skeleton-block"></div>
+            <div class="h-4 w-2/3 skeleton-block"></div>
+            <div class="h-3 w-full skeleton-block"></div>
+            <div class="h-8 w-1/2 skeleton-block"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Information & Policies -->
+      <div class="surface-card rounded-lg p-6 sm:p-8 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b theme-border pb-4">
+          <h2 class="text-xl font-bold theme-text-primary">Property Details and Guest Policies</h2>
+          <span class="text-xs font-mono theme-text-secondary" id="policies-last-updated">Last updated: November 11, 2026</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs theme-text-secondary">
+          <div class="space-y-5">
+            <div>
+              <h3 class="font-bold theme-text-primary text-sm mb-1.5">Arrival, Departure, and Holds</h3>
+              <p class="leading-relaxed">Standard check-in begins at 15:00 and check-out is at 11:00. When reserving online, your room is held exclusively for 10 minutes during checkout while payment is verified.</p>
+            </div>
+            <div>
+              <h3 class="font-bold theme-text-primary text-sm mb-1.5">Cancellation and Refunds</h3>
+              <p class="leading-relaxed">Confirmed reservations may be cancelled directly from your account prior to check-in. Cancelled stays trigger an immediate refund of the authorized payment amount.</p>
+            </div>
+          </div>
+          <div class="space-y-5">
+            <div>
+              <h3 class="font-bold theme-text-primary text-sm mb-1.5">Taxes, Fees, and Rate Rules</h3>
+              <p class="leading-relaxed">A 12% GST hospitality tax and a $25.00 per night resort service fee apply to all stays. Friday and Saturday nights include a 15% weekend adjustment.</p>
+            </div>
+            <div>
+              <h3 class="font-bold theme-text-primary text-sm mb-1.5">Location and Front Desk</h3>
+              <p class="leading-relaxed">420 Bayview Road, Dona Paula, Panaji, Goa 403004, India. Front desk staff are available 24 hours at +91 832 245 6780 for arrivals, transfers, and special requests.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPANDABLE FAQ SECTION -->
+      <div id="faq-section" class="surface-card rounded-lg p-6 sm:p-8 space-y-5">
+        <div class="border-b theme-border pb-4">
+          <h2 class="text-xl font-bold theme-text-primary">Frequently Asked Questions</h2>
+          <p class="text-xs theme-text-secondary mt-1">Common questions about reservations, holds, parking, and policies.</p>
+        </div>
+        <div id="faq-list" class="divide-y theme-border border theme-border rounded-lg overflow-hidden">
+          <!-- Populated dynamically in app.js so Site Search can also jump straight to FAQs -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 2: DEDICATED LOGIN & CREATE ACCOUNT PAGE (/login)                -->
+    <!-- ===================================================================== -->
+    <section id="view-login" class="space-y-8 hidden">
+      <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
+        <!-- Left Column: Sign In / Create Account Card -->
+        <div class="lg:col-span-7 surface-card rounded-lg p-6 sm:p-8">
+
+          <!-- Auth Mode Tabs -->
+          <div class="flex border-b theme-border mb-6">
+            <button type="button" id="tab-auth-login" onclick="switchAuthTab('login')" class="pb-3 px-4 text-sm font-bold border-b-2 auth-tab-active theme-text-primary cursor-pointer">
+              Sign In
+            </button>
+            <button type="button" id="tab-auth-register" onclick="switchAuthTab('register')" class="pb-3 px-4 text-sm font-medium border-b-2 border-transparent theme-text-secondary cursor-pointer">
+              Create Account
+            </button>
+          </div>
+
+          <!-- Form A: Sign In -->
+          <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+            <div>
+              <h2 class="text-xl font-bold theme-text-primary">Sign In to Your Account</h2>
+              <p class="text-xs theme-text-secondary mt-1">Access your booking history or operational staff workspace.</p>
+            </div>
+
+            <div id="login-form-error" role="alert" class="hidden form-status-error rounded px-4 py-3 text-xs"></div>
+            <div id="login-form-success" role="status" class="hidden form-status-success rounded px-4 py-3 text-xs"></div>
+
+            <div>
+              <label for="login-email" class="block text-xs font-semibold theme-text-primary mb-2">Email Address</label>
+              <input type="email" id="login-email" required placeholder="aarav.sharma@example.in" class="theme-input w-full rounded px-3.5 py-2.5 text-sm">
+            </div>
+
+            <div>
+              <label for="login-password" class="block text-xs font-semibold theme-text-primary mb-2">Password</label>
+              <div class="relative flex items-center">
+                <input type="password" id="login-password" required placeholder="Enter password" class="theme-input w-full rounded px-3.5 py-2.5 pr-16 text-sm">
+                <button type="button" onclick="togglePasswordVisibility('login-password', this)" aria-pressed="false" class="btn-secondary absolute right-2 px-2.5 py-1 rounded text-[11px]">
+                  Show
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-login-submit" class="btn-primary w-full py-2.5 rounded text-sm">
+              Sign In
+            </button>
+          </form>
+
+          <!-- Form B: Create Guest Account -->
+          <form id="register-form" onsubmit="handleRegister(event)" class="space-y-5 hidden">
+            <div>
+              <h2 class="text-xl font-bold theme-text-primary">Create Guest Account</h2>
+              <p class="text-xs theme-text-secondary mt-1">Register to save your guest profile and track all reservations in your account.</p>
+            </div>
+
+            <div id="register-form-error" role="alert" class="hidden form-status-error rounded px-4 py-3 text-xs"></div>
+            <div id="register-form-success" role="status" class="hidden form-status-success rounded px-4 py-3 text-xs"></div>
+
+            <div>
+              <label for="reg-fullname" class="block text-xs font-semibold theme-text-primary mb-2">Full Name *</label>
+              <input type="text" id="reg-fullname" required placeholder="Priya Nair" class="theme-input w-full rounded px-3.5 py-2.5 text-sm">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="reg-email" class="block text-xs font-semibold theme-text-primary mb-2">Email Address *</label>
+                <input type="email" id="reg-email" required placeholder="priya.nair@example.in" class="theme-input w-full rounded px-3.5 py-2.5 text-sm">
+              </div>
+              <div>
+                <label for="reg-phone" class="block text-xs font-semibold theme-text-primary mb-2">Phone Number *</label>
+                <input type="tel" id="reg-phone" required placeholder="+91 98201 44510" class="theme-input w-full rounded px-3.5 py-2.5 text-sm">
+              </div>
+            </div>
+
+            <div>
+              <label for="reg-password" class="block text-xs font-semibold theme-text-primary mb-2">Password (min 6 characters) *</label>
+              <div class="relative flex items-center">
+                <input type="password" id="reg-password" required minlength="6" placeholder="Create a password" class="theme-input w-full rounded px-3.5 py-2.5 pr-16 text-sm">
+                <button type="button" onclick="togglePasswordVisibility('reg-password', this)" aria-pressed="false" class="btn-secondary absolute right-2 px-2.5 py-1 rounded text-[11px]">
+                  Show
+                </button>
+              </div>
+            </div>
+
+            <div class="sr-only" aria-hidden="true">
+              <label for="reg-honeypot">Website</label>
+              <input type="text" id="reg-honeypot" name="honeypot_website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <button type="submit" id="btn-register-submit" class="btn-primary w-full py-2.5 rounded text-sm">
+              Create Account
+            </button>
+          </form>
+
+        </div>
+
+        <!-- Right Column: Account Info & Support -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="surface-panel rounded-lg p-6 sm:p-8 space-y-3 text-xs">
+            <h3 class="text-sm font-bold theme-text-primary">Account Access</h3>
+            <ul class="space-y-2 theme-text-secondary list-disc pl-4 leading-relaxed">
+              <li>Guest accounts automatically save your reservation history and contact info.</li>
+              <li>Staff accounts access Front Desk check-in/check-out, Housekeeping boards, and Operations Reports.</li>
+              <li>Admin accounts manage room rates, room inventory, and the system audit log.</li>
+            </ul>
+          </div>
+
+          <div class="surface-card rounded-lg p-6 sm:p-8 space-y-3 text-xs">
+            <h3 class="text-sm font-bold theme-text-primary border-b theme-border pb-2.5">Lookup Without an Account</h3>
+            <p class="theme-text-secondary leading-relaxed">
+              Already booked as a guest? You can view your confirmation voucher or manage cancellations directly using your booking reference code.
+            </p>
+            <button type="button" onclick="navigate('my-bookings')" class="btn-secondary px-4 py-2 rounded text-xs">
+              Look Up Booking Reference
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 3: ROOMS & AVAILABILITY SEARCH (/rooms)                          -->
+    <!-- ===================================================================== -->
+    <section id="view-search" class="space-y-8 hidden">
+
+      <div class="border-b theme-border pb-5">
+        <h1 class="text-2xl font-bold theme-text-primary">Room Availability and Booking</h1>
+        <p class="text-xs theme-text-secondary mt-1.5">Search live availability across all room categories. Select a suite to calculate itemized taxes and place a 10-minute checkout hold.</p>
+      </div>
+
+      <!-- Availability Search Form -->
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <form id="search-form" onsubmit="handleAvailabilitySearch(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+
+          <div>
+            <label for="search-check-in" class="block text-xs font-semibold theme-text-primary mb-2">
+              Check-In Date
+            </label>
+            <input type="date" id="search-check-in" required class="theme-input w-full rounded px-3 py-2.5 text-sm font-mono">
+          </div>
+
+          <div>
+            <label for="search-check-out" class="block text-xs font-semibold theme-text-primary mb-2">
+              Check-Out Date
+            </label>
+            <input type="date" id="search-check-out" required class="theme-input w-full rounded px-3 py-2.5 text-sm font-mono">
+          </div>
+
+          <div>
+            <label for="search-adults" class="block text-xs font-semibold theme-text-primary mb-2">
+              Adults (13+)
+            </label>
+            <select id="search-adults" class="theme-input w-full rounded px-3 py-2.5 text-sm">
+              <option value="1">1 Adult</option>
+              <option value="2" selected>2 Adults</option>
+              <option value="3">3 Adults</option>
+              <option value="4">4 Adults</option>
+              <option value="5">5 Adults</option>
+              <option value="6">6 Adults</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="search-children" class="block text-xs font-semibold theme-text-primary mb-2">
+              Children (0-12)
+            </label>
+            <select id="search-children" class="theme-input w-full rounded px-3 py-2.5 text-sm">
+              <option value="0" selected>0 Children</option>
+              <option value="1">1 Child</option>
+              <option value="2">2 Children</option>
+              <option value="3">3 Children</option>
+            </select>
+          </div>
+
+          <div>
+            <button type="submit" id="btn-search-submit" class="btn-primary w-full py-2.5 px-4 rounded text-sm">
+              Check Availability
+            </button>
+          </div>
+
+        </form>
+        <div id="search-form-error" role="alert" class="hidden form-status-error rounded px-4 py-2.5 text-xs mt-4"></div>
+      </div>
+
+      <!-- Active Hold Notification Bar -->
+      <div id="active-hold-banner" class="hidden surface-card badge-hold rounded-lg p-5 flex flex-wrap items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="text-sm font-bold">
+            Active Room Hold: <span id="hold-banner-ref" class="font-mono">BK-...</span>
+          </div>
+          <p class="text-xs">
+            This room is reserved exclusively for you. Complete checkout before the hold expires.
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="text-right">
+            <span class="text-[11px] uppercase font-semibold block">Remaining</span>
+            <span id="hold-banner-timer" class="font-mono text-lg font-bold tabular-nums">10:00</span>
+          </div>
+          <button onclick="resumeCheckout()" class="btn-primary px-4 py-2 rounded text-xs">
+            Resume Checkout
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Results Grid -->
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b theme-border pb-3">
+          <h2 class="text-lg font-bold theme-text-primary">Available Room Types</h2>
+          <span id="search-results-count" class="text-xs font-mono theme-text-secondary">Loading room types...</span>
+        </div>
+
+        <div id="rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="col-span-full surface-card rounded-lg p-8 text-center text-sm theme-text-secondary">
+            <span class="loading-spinner mr-2"></span> Checking live room availability...
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 4: MY BOOKINGS                                                   -->
+    <!-- ===================================================================== -->
+    <section id="view-my-bookings" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b theme-border pb-5">
+          <div>
+            <h2 class="text-xl font-bold theme-text-primary">My Reservations</h2>
+            <p class="text-xs theme-text-secondary mt-1">View booking status, open printable vouchers, or cancel eligible reservations.</p>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <input type="text" id="lookup-ref-input" placeholder="Reference (e.g. BK-2026-8812)" class="theme-input rounded px-3 py-2 text-xs font-mono uppercase w-full sm:w-56">
+            <button onclick="handleBookingLookup()" class="btn-secondary px-4 py-2 rounded text-xs whitespace-nowrap">
+              Look Up
+            </button>
+          </div>
+        </div>
+
+        <div id="guest-bookings-list" class="mt-6 space-y-4"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 5: FRONT DESK (Staff & Admin)                                    -->
+    <!-- ===================================================================== -->
+    <section id="view-front-desk" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b theme-border pb-6">
+          <div>
+            <h1 class="text-2xl font-bold theme-text-primary">Front Desk Reservations</h1>
+            <p class="text-xs theme-text-secondary mt-1.5">Search guest records, execute check-ins and check-outs, and process cancellations.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <input type="text" id="staff-search-input" oninput="handleStaffSearch(event)" placeholder="Search guest, ref, room..." class="theme-input rounded px-3 py-2 text-xs w-48 sm:w-64">
+            <select id="staff-status-filter" onchange="loadStaffBookings()" class="theme-input rounded px-3 py-2 text-xs">
+              <option value="ALL">All Statuses</option>
+              <option value="CONFIRMED">Confirmed</option>
+              <option value="CHECKED_IN">Checked In</option>
+              <option value="CHECKED_OUT">Checked Out</option>
+              <option value="CANCELLED">Cancelled</option>
+              <option value="HOLD">Active Holds</option>
+            </select>
+            <button onclick="loadStaffBookings()" class="btn-secondary px-3.5 py-2 rounded text-xs whitespace-nowrap">
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto mt-5">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="theme-table-head uppercase text-[11px] font-semibold">
+              <tr>
+                <th class="py-3.5 px-4">Reference</th>
+                <th class="py-3.5 px-4">Guest</th>
+                <th class="py-3.5 px-4">Room</th>
+                <th class="py-3.5 px-4">Stay Dates</th>
+                <th class="py-3.5 px-4">Total</th>
+                <th class="py-3.5 px-4">Status</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="staff-bookings-table-body" class="divide-y theme-border theme-text-primary"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 6: HOUSEKEEPING & ROOM STATUS                                    -->
+    <!-- ===================================================================== -->
+    <section id="view-housekeeping" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b theme-border pb-6">
+          <div>
+            <h1 class="text-2xl font-bold theme-text-primary">Housekeeping and Room Status Board</h1>
+            <p class="text-xs theme-text-secondary mt-1.5">Live inventory organized by floor. Update room readiness, cleaning, and maintenance statuses.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 text-[11px] font-semibold shrink-0">
+            <span class="badge-available px-2 py-0.5 rounded">AVAILABLE</span>
+            <span class="badge-occupied px-2 py-0.5 rounded">OCCUPIED</span>
+            <span class="badge-cleaning px-2 py-0.5 rounded">CLEANING</span>
+            <span class="badge-maintenance px-2 py-0.5 rounded">MAINTENANCE</span>
+            <span class="badge-out-of-order px-2 py-0.5 rounded">OUT_OF_ORDER</span>
+          </div>
+        </div>
+
+        <div id="housekeeping-floor-grid" class="mt-6 space-y-6"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 7: OPERATIONS REPORT                                             -->
+    <!-- ===================================================================== -->
+    <section id="view-reports" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b theme-border pb-6">
+          <div>
+            <h1 class="text-2xl font-bold theme-text-primary">Operations and Revenue Report</h1>
+            <p class="text-xs theme-text-secondary mt-1.5">Occupancy, ADR, RevPAR, arrivals, and departures reconciled directly from confirmed reservations.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <input type="date" id="report-start-date" class="theme-input rounded px-3 py-2 text-xs font-mono">
+            <span class="text-xs theme-text-secondary">to</span>
+            <input type="date" id="report-end-date" class="theme-input rounded px-3 py-2 text-xs font-mono">
+            <button onclick="loadOperationsReport()" class="btn-primary px-4 py-2 rounded text-xs whitespace-nowrap">
+              Apply Range
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5 mt-6">
+          <div class="surface-panel rounded p-5">
+            <span class="text-[11px] font-semibold uppercase theme-text-secondary block">Occupancy Rate</span>
+            <span id="kpi-occupancy" class="text-2xl font-bold font-mono tabular-nums theme-text-primary block mt-1.5">0%</span>
+            <span id="kpi-room-nights" class="text-[11px] theme-text-secondary block mt-1 font-mono">0 / 0 nights</span>
+          </div>
+
+          <div class="surface-panel rounded p-5">
+            <span class="text-[11px] font-semibold uppercase theme-text-secondary block">Total Revenue</span>
+            <span id="kpi-revenue" class="text-2xl font-bold font-mono tabular-nums theme-text-primary block mt-1.5">$0.00</span>
+            <span class="text-[11px] theme-text-secondary block mt-1">Confirmed and completed</span>
+          </div>
+
+          <div class="surface-panel rounded p-5">
+            <span class="text-[11px] font-semibold uppercase theme-text-secondary block">ADR</span>
+            <span id="kpi-adr" class="text-2xl font-bold font-mono tabular-nums theme-text-primary block mt-1.5">$0.00</span>
+            <span class="text-[11px] theme-text-secondary block mt-1">Average Daily Rate</span>
+          </div>
+
+          <div class="surface-panel rounded p-5">
+            <span class="text-[11px] font-semibold uppercase theme-text-secondary block">RevPAR</span>
+            <span id="kpi-revpar" class="text-2xl font-bold font-mono tabular-nums theme-text-primary block mt-1.5">$0.00</span>
+            <span class="text-[11px] theme-text-secondary block mt-1">Rev. per available room</span>
+          </div>
+
+          <div class="surface-panel rounded p-5">
+            <span class="text-[11px] font-semibold uppercase theme-text-secondary block">In-House</span>
+            <span id="kpi-checked-in" class="text-2xl font-bold font-mono tabular-nums theme-text-primary block mt-1.5">0</span>
+            <span class="text-[11px] theme-text-secondary block mt-1">Checked-in reservations</span>
+          </div>
+
+          <div class="surface-panel rounded p-5">
+            <span class="text-[11px] font-semibold uppercase theme-text-secondary block">Cancellations</span>
+            <span id="kpi-cancelled" class="text-2xl font-bold font-mono tabular-nums theme-text-primary block mt-1.5">0</span>
+            <span id="kpi-refunded" class="text-[11px] theme-text-secondary block mt-1 font-mono">$0 refunded</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div class="surface-card rounded-lg p-6">
+            <h3 class="text-sm font-bold theme-text-primary mb-3">Upcoming Arrivals</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="theme-table-head text-[10px] uppercase font-semibold">
+                  <tr>
+                    <th class="py-2.5 px-3">Ref</th>
+                    <th class="py-2.5 px-3">Guest</th>
+                    <th class="py-2.5 px-3">Room</th>
+                    <th class="py-2.5 px-3">Check-In</th>
+                    <th class="py-2.5 px-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="report-arrivals-tbody" class="divide-y theme-border theme-text-primary"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="surface-card rounded-lg p-6">
+            <h3 class="text-sm font-bold theme-text-primary mb-3">Upcoming Departures</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="theme-table-head text-[10px] uppercase font-semibold">
+                  <tr>
+                    <th class="py-2.5 px-3">Ref</th>
+                    <th class="py-2.5 px-3">Guest</th>
+                    <th class="py-2.5 px-3">Room</th>
+                    <th class="py-2.5 px-3">Check-Out</th>
+                    <th class="py-2.5 px-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="report-departures-tbody" class="divide-y theme-border theme-text-primary"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 surface-card rounded-lg p-6">
+          <h3 class="text-sm font-bold theme-text-primary mb-3">Revenue and Occupancy by Room Type</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead class="theme-table-head text-[10px] uppercase font-semibold">
+                <tr>
+                  <th class="py-2.5 px-3">Room Type</th>
+                  <th class="py-2.5 px-3">Bookings</th>
+                  <th class="py-2.5 px-3">Occupied Nights</th>
+                  <th class="py-2.5 px-3">Occupancy Share</th>
+                  <th class="py-2.5 px-3 text-right">Revenue</th>
+                </tr>
+              </thead>
+              <tbody id="report-type-breakdown-tbody" class="divide-y theme-border theme-text-primary"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- First-Party Analytics Summary -->
+        <div class="mt-6 surface-panel rounded-lg p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h3 class="text-sm font-bold theme-text-primary">Site Traffic and Conversion Analytics</h3>
+            <span class="text-[11px] font-mono theme-text-secondary" id="analytics-total-events">0 total events</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs" id="analytics-counts-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 8: ROOM ADMIN (Admin Only)                                       -->
+    <!-- ===================================================================== -->
+    <section id="view-room-admin" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b theme-border pb-6">
+          <div>
+            <h1 class="text-2xl font-bold theme-text-primary">Room and Rate Administration</h1>
+            <p class="text-xs theme-text-secondary mt-1.5">Configure room types, base nightly rates, capacities, and physical room units.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <button onclick="openNewRoomTypeModal()" class="btn-primary px-4 py-2 rounded text-xs whitespace-nowrap">
+              + New Room Type
+            </button>
+            <button onclick="openNewPhysicalRoomModal()" class="btn-secondary px-4 py-2 rounded text-xs whitespace-nowrap">
+              + Add Room
+            </button>
+          </div>
+        </div>
+
+        <div id="admin-room-types-table" class="mt-6"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 9: AUDIT LOGS (Admin Only)                                       -->
+    <!-- ===================================================================== -->
+    <section id="view-audit-logs" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b theme-border pb-6">
+          <div>
+            <h1 class="text-2xl font-bold theme-text-primary">Audit Trail</h1>
+            <p class="text-xs theme-text-secondary mt-1.5">Immutable record of reservations, check-ins, check-outs, cancellations, and inventory changes.</p>
+          </div>
+          <button onclick="loadAuditLogs()" class="btn-secondary px-4 py-2 rounded text-xs whitespace-nowrap shrink-0">
+            Refresh Logs
+          </button>
+        </div>
+
+        <div class="overflow-x-auto mt-5">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="theme-table-head uppercase text-[10px] font-semibold">
+              <tr>
+                <th class="py-3 px-3">Timestamp</th>
+                <th class="py-3 px-3">Actor</th>
+                <th class="py-3 px-3">Action</th>
+                <th class="py-3 px-3">Entity</th>
+                <th class="py-3 px-3">Details</th>
+              </tr>
+            </thead>
+            <tbody id="audit-logs-table-body" class="divide-y theme-border theme-text-primary font-mono text-[11px]"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 10: PRIVACY POLICY PAGE (/privacy)                               -->
+    <!-- ===================================================================== -->
+    <section id="view-privacy" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8 w-full space-y-6">
+        <div class="border-b theme-border pb-4 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h1 class="text-2xl font-bold theme-text-primary">Privacy Policy</h1>
+            <p class="text-xs theme-text-secondary mt-1">How Grand Horizon Hotel collects, stores, and protects guest data.</p>
+          </div>
+          <span class="text-xs font-mono theme-text-secondary">Last updated: November 11, 2026</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 text-xs theme-text-secondary leading-relaxed">
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">1. Information We Collect</h2>
+            <p>When you create an account, place a room hold, or submit an inquiry, we store your name, email address, phone number, reservation dates, special requests, and optional campaign attribution parameters (UTM tags) in our MongoDB database.</p>
+          </div>
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">2. Authentication and Payment Security</h2>
+            <p>Account passwords are salted and hashed with PBKDF2-SHA512 before storage. Checkout payments on this site use a simulated sandbox gateway; no real credit card numbers or live banking credentials are processed or retained.</p>
+          </div>
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">3. Cookies and First-Party Analytics</h2>
+            <p>We use local storage and session storage for authentication tokens, light/dark theme preferences, and checkout timers. When you accept cookies, we record anonymous first-party page-view and reservation-funnel counts to improve booking availability and page performance.</p>
+          </div>
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">4. Data Access and Deletion Requests</h2>
+            <p>Guests may view their reservation records under My Bookings or contact our Front Desk via reservations@grandhorizon.in to request updates or removal of account data.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 11: TERMS AND CONDITIONS PAGE (/terms)                           -->
+    <!-- ===================================================================== -->
+    <section id="view-terms" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-6 sm:p-8 w-full space-y-6">
+        <div class="border-b theme-border pb-4 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h1 class="text-2xl font-bold theme-text-primary">Terms and Conditions</h1>
+            <p class="text-xs theme-text-secondary mt-1">Reservation rules, checkout holds, cancellation terms, and property policies.</p>
+          </div>
+          <span class="text-xs font-mono theme-text-secondary">Last updated: November 11, 2026</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 text-xs theme-text-secondary leading-relaxed">
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">1. Reservations and 10-Minute Holds</h2>
+            <p>All room bookings require valid future check-in and check-out dates up to 30 consecutive nights. Starting checkout places an exclusive 10-minute hold on an assigned room. Unconfirmed holds automatically expire and release the room back to public availability.</p>
+          </div>
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">2. Rates, Taxes, and Service Fees</h2>
+            <p>Room totals include nightly base rates, applicable weekend (15% Fri-Sat) or seasonal adjustments, selected add-ons, a 12% GST hospitality tax, and a $25.00 per night resort service fee.</p>
+          </div>
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">3. Check-In, Check-Out, and Occupancy</h2>
+            <p>Standard check-in is 15:00 and check-out is 11:00. Maximum guest occupancy limits per room type are strictly enforced during booking search and check-in.</p>
+          </div>
+          <div class="surface-panel rounded-lg p-6">
+            <h2 class="text-sm font-bold theme-text-primary mb-2">4. Cancellations and Refunds</h2>
+            <p>Confirmed bookings may be cancelled before check-in via My Bookings or Front Desk staff. Valid cancellations trigger an automatic sandbox refund record for the full paid amount. Reservations already checked in must be processed as an early check-out.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 12: CUSTOM 404 PAGE                                              -->
+    <!-- ===================================================================== -->
+    <section id="view-404" class="space-y-8 hidden">
+      <div class="surface-card rounded-lg p-8 sm:p-12 w-full max-w-2xl mx-auto text-center space-y-5">
+        <div class="font-mono text-4xl font-bold theme-text-primary">404</div>
+        <h1 class="text-2xl font-bold theme-text-primary">Page Not Found</h1>
+        <p class="text-xs theme-text-secondary leading-relaxed">
+          The page you requested does not exist or may have moved. Use the links below to return to the hotel home page or search available rooms.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <button type="button" onclick="navigate('landing')" class="btn-primary px-5 py-2.5 rounded text-xs">
+            Return to Home
+          </button>
+          <button type="button" onclick="navigate('search')" class="btn-secondary px-5 py-2.5 rounded text-xs">
+            Search Available Rooms
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOOKING FLOW MODAL -->
+  <div id="modal-booking" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="surface-card rounded-lg max-w-2xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-xl relative">
+      <button type="button" onclick="closeBookingModal()" aria-label="Close booking modal" class="btn-secondary absolute top-4 right-4 text-sm font-bold px-2.5 py-1 rounded no-print">
+        &times;
+      </button>
+
+      <!-- Step 1: Guest Details & Add-ons -->
+      <div id="booking-step-details">
+        <div class="border-b theme-border pb-4 mb-5 pr-10">
+          <span class="text-xs font-mono font-semibold theme-text-secondary uppercase">Step 1 of 2: Guest Details</span>
+          <h3 id="modal-booking-room-name" class="text-xl font-bold theme-text-primary mt-1">Room Name</h3>
+          <p id="modal-booking-dates-summary" class="text-xs theme-text-secondary mt-1 font-mono">Dates summary</p>
+        </div>
+
+        <form id="booking-details-form" onsubmit="handlePlaceHold(event)" class="space-y-5">
+          <div id="hold-form-error" role="alert" class="hidden form-status-error rounded px-4 py-3 text-xs"></div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="booking-guest-name" class="block text-xs font-semibold theme-text-primary mb-1.5">Full Name *</label>
+              <input type="text" id="booking-guest-name" required minlength="2" placeholder="Aarav Sharma" class="theme-input w-full rounded px-3 py-2 text-xs">
+            </div>
+            <div>
+              <label for="booking-guest-email" class="block text-xs font-semibold theme-text-primary mb-1.5">Email Address *</label>
+              <input type="email" id="booking-guest-email" required placeholder="aarav.sharma@example.in" class="theme-input w-full rounded px-3 py-2 text-xs">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="booking-guest-phone" class="block text-xs font-semibold theme-text-primary mb-1.5">Phone Number *</label>
+              <input type="tel" id="booking-guest-phone" required minlength="7" placeholder="+91 98201 44510" class="theme-input w-full rounded px-3 py-2 text-xs">
+            </div>
+            <div>
+              <label for="booking-special-requests" class="block text-xs font-semibold theme-text-primary mb-1.5">Special Requests</label>
+              <input type="text" id="booking-special-requests" placeholder="High floor sea view, late arrival" class="theme-input w-full rounded px-3 py-2 text-xs">
+            </div>
+          </div>
+
+          <div class="sr-only" aria-hidden="true">
+            <label for="hold-honeypot">Website</label>
+            <input type="text" id="hold-honeypot" name="honeypot_website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="pt-1">
+            <span class="block text-xs font-bold theme-text-primary uppercase mb-2.5">Optional Add-ons</span>
+            <div id="booking-add-ons-container" class="space-y-2.5"></div>
+          </div>
+
+          <div id="booking-price-preview" class="surface-panel rounded p-4 text-xs space-y-2 mt-4"></div>
+
+          <div class="pt-2 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-xs theme-text-secondary">
+              Places a 10-minute exclusive hold on the assigned room.
+            </span>
+            <button type="submit" id="btn-place-hold" class="btn-primary px-5 py-2.5 rounded text-xs">
+              Place 10-Min Hold and Continue
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Hold & Simulated Payment -->
+      <div id="booking-step-payment" class="hidden">
+        <div class="border-b theme-border pb-4 mb-5 pr-10 flex items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-mono font-semibold badge-confirmed px-2 py-0.5 rounded uppercase">Step 2 of 2: Hold Secured</span>
+            <h3 class="text-xl font-bold theme-text-primary mt-1.5">Sandbox Payment Confirmation</h3>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] theme-text-secondary uppercase font-semibold block">Hold Expires In</span>
+            <span id="payment-timer" class="font-mono text-lg font-bold theme-text-primary tabular-nums">10:00</span>
+          </div>
+        </div>
+
+        <div class="surface-panel rounded p-4 text-xs mb-5 flex justify-between items-center gap-4">
+          <div>
+            <div class="theme-text-secondary flex items-center gap-2">
+              <span>Booking Reference:</span>
+              <span id="payment-booking-ref" class="theme-text-primary font-mono font-bold">BK-...</span>
+              <button type="button" onclick="copyText(document.getElementById('payment-booking-ref').textContent, this)" class="btn-secondary px-2 py-0.5 rounded text-[10px]">
+                Copy
+              </button>
+            </div>
+            <div id="payment-room-desc" class="theme-text-primary font-semibold mt-1">Room 201</div>
+          </div>
+          <div class="text-right">
+            <span class="theme-text-secondary text-[10px] uppercase font-semibold block">Total Due</span>
+            <span id="payment-total-amount" class="text-lg font-bold font-mono tabular-nums theme-text-primary">$0.00</span>
+          </div>
+        </div>
+
+        <div class="surface-card rounded p-3.5 text-xs mb-5">
+          <div class="font-semibold theme-text-primary mb-2">Sandbox Test Cards:</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="fillTestCard('SUCCESS')" class="px-2.5 py-1.5 rounded badge-available text-xs font-semibold cursor-pointer">
+              Fill 4242... (Approve Payment)
+            </button>
+            <button type="button" onclick="fillTestCard('DECLINE')" class="px-2.5 py-1.5 rounded badge-maintenance text-xs font-semibold cursor-pointer">
+              Fill 4000... (Simulate Decline)
+            </button>
+          </div>
+        </div>
+
+        <form id="payment-form" onsubmit="handleConfirmPayment(event)" class="space-y-4">
+          <div id="payment-form-error" role="alert" class="hidden form-status-error rounded px-4 py-3 text-xs"></div>
+          <div id="payment-form-success" role="status" class="hidden form-status-success rounded px-4 py-3 text-xs"></div>
+
+          <div>
+            <label for="card-name" class="block text-xs font-semibold theme-text-primary mb-1.5">Cardholder Name</label>
+            <input type="text" id="card-name" required value="Aarav Sharma" class="theme-input w-full rounded px-3 py-2 text-xs">
+          </div>
+
+          <div>
+            <label for="card-number" class="block text-xs font-semibold theme-text-primary mb-1.5">Card Number</label>
+            <input type="text" id="card-number" required value="4242 4242 4242 4242" class="theme-input w-full rounded px-3 py-2 text-xs font-mono">
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="card-exp" class="block text-xs font-semibold theme-text-primary mb-1.5">Expiration (MM/YY)</label>
+              <input type="text" id="card-exp" required value="12/28" class="theme-input w-full rounded px-3 py-2 text-xs font-mono">
+            </div>
+            <div>
+              <label for="card-cvv" class="block text-xs font-semibold theme-text-primary mb-1.5">CVV</label>
+              <input type="text" id="card-cvv" required value="999" class="theme-input w-full rounded px-3 py-2 text-xs font-mono">
+            </div>
+          </div>
+
+          <div class="pt-2 flex flex-wrap items-center justify-between gap-3">
+            <button type="button" onclick="confirmCancelHold()" class="btn-danger px-3.5 py-2 rounded text-xs">
+              Cancel Hold and Release Room
+            </button>
+            <button type="submit" id="btn-confirm-pay" class="btn-primary px-6 py-2.5 rounded text-xs">
+              Confirm and Pay <span id="pay-btn-amount" class="ml-1 font-mono">$0.00</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Booking Voucher -->
+      <div id="booking-step-voucher" class="hidden">
+        <div id="printable-voucher" class="space-y-4">
+          <div class="pb-4 border-b theme-border pr-10">
+            <span class="badge-confirmed px-2 py-0.5 rounded text-[11px] font-bold">CONFIRMED</span>
+            <h3 class="text-2xl font-bold theme-text-primary mt-2">Reservation Confirmation</h3>
+            <p class="text-xs theme-text-secondary mt-0.5">Grand Horizon Hotel, Dona Paula, Goa, India</p>
+            <div class="mt-3 flex flex-wrap items-center gap-2">
+              <div class="inline-block px-3 py-1.5 surface-panel rounded font-mono theme-text-primary font-bold text-sm">
+                Reference: <span id="voucher-ref">BK-2026-XXXX</span>
+              </div>
+              <button type="button" onclick="copyText(document.getElementById('voucher-ref').textContent, this)" class="btn-secondary px-3 py-1.5 rounded text-xs no-print">
+                Copy Reference
+              </button>
+            </div>
+          </div>
+
+          <div id="voucher-content" class="surface-panel rounded p-5 text-xs space-y-3"></div>
+        </div>
+
+        <div class="pt-5 flex flex-wrap items-center justify-between gap-3 no-print">
+          <button onclick="window.print()" class="btn-secondary px-4 py-2 rounded text-xs">
+            Print Voucher
+          </button>
+          <button onclick="closeBookingModal(); navigate('my-bookings')" class="btn-primary px-5 py-2 rounded text-xs">
+            Go to My Bookings
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONFIRMATION MODAL (Replaces native window.confirm) -->
+  <div id="modal-confirm" class="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+    <div class="surface-card rounded-lg max-w-md w-full p-6 shadow-xl space-y-4">
+      <div class="border-b theme-border pb-3">
+        <h3 id="confirm-modal-title" class="text-lg font-bold theme-text-primary">Confirm Action</h3>
+      </div>
+      <p id="confirm-modal-message" class="text-xs theme-text-secondary leading-relaxed"></p>
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" id="confirm-modal-cancel" onclick="closeConfirmModal()" class="btn-secondary px-4 py-2 rounded text-xs">
+          Keep Current State
+        </button>
+        <button type="button" id="confirm-modal-ok" class="btn-danger px-4 py-2 rounded text-xs">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING CONTACT / INQUIRY MODAL -->
+  <div id="modal-contact" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+    <div class="surface-card rounded-lg max-w-md w-full p-6 shadow-xl relative space-y-4">
+      <button type="button" onclick="closeContactModal()" aria-label="Close contact dialog" class="btn-secondary absolute top-4 right-4 text-sm font-bold px-2.5 py-0.5 rounded">
+        &times;
+      </button>
+
+      <div class="border-b theme-border pb-3 pr-8">
+        <h3 id="contact-modal-title" class="text-lg font-bold theme-text-primary">Contact Front Desk</h3>
+        <p class="text-xs theme-text-secondary mt-0.5">Reach our Dona Paula desk directly or leave a message.</p>
+      </div>
+
+      <div class="surface-panel rounded p-3.5 text-xs space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <span class="font-semibold theme-text-primary block">24/7 Front Desk Phone</span>
+            <span class="font-mono theme-text-secondary" id="contact-phone-text">+91 832 245 6780</span>
+          </div>
+          <button type="button" onclick="copyText('+91 832 245 6780', this)" class="btn-secondary px-2.5 py-1 rounded text-[11px]">Copy</button>
+        </div>
+        <div class="flex items-center justify-between gap-2 pt-2 border-t theme-border">
+          <div>
+            <span class="font-semibold theme-text-primary block">Reservations Desk Email</span>
+            <span class="font-mono theme-text-secondary">reservations@grandhorizon.in</span>
+          </div>
+          <button type="button" onclick="copyText('reservations@grandhorizon.in', this)" class="btn-secondary px-2.5 py-1 rounded text-[11px]">Copy</button>
+        </div>
+      </div>
+
+      <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-3.5">
+        <div id="contact-form-error" role="alert" class="hidden form-status-error rounded px-3 py-2 text-xs"></div>
+        <div id="contact-form-success" role="status" class="hidden form-status-success rounded px-3 py-2 text-xs"></div>
+
+        <div>
+          <label for="contact-name" class="block text-xs font-semibold theme-text-primary mb-1">Your Name *</label>
+          <input type="text" id="contact-name" required placeholder="Ananya Iyer" class="theme-input w-full rounded px-3 py-2 text-xs">
+        </div>
+        <div>
+          <label for="contact-email" class="block text-xs font-semibold theme-text-primary mb-1">Email Address *</label>
+          <input type="email" id="contact-email" required placeholder="ananya.iyer@example.in" class="theme-input w-full rounded px-3 py-2 text-xs">
+        </div>
+        <div>
+          <label for="contact-message" class="block text-xs font-semibold theme-text-primary mb-1">Message *</label>
+          <textarea id="contact-message" required minlength="5" rows="3" placeholder="Questions about check-in, group stays, or airport transfers..." class="theme-input w-full rounded px-3 py-2 text-xs"></textarea>
+        </div>
+
+        <div class="sr-only" aria-hidden="true">
+          <label for="contact-honeypot">Website</label>
+          <input type="text" id="contact-honeypot" name="honeypot_website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button type="submit" id="btn-contact-submit" class="btn-primary w-full py-2.5 rounded text-xs">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FLOATING CONTROLS (Back to Top + Contact Button) -->
+  <div id="floating-controls" class="fixed bottom-5 right-5 z-40 flex items-center gap-2.5 no-print">
+    <button type="button" id="back-to-top" onclick="scrollToTop()" aria-label="Back to top" class="hidden btn-secondary px-3.5 py-2 rounded-full shadow-md text-xs">
+      Back to Top
+    </button>
+    <button type="button" id="floating-contact-btn" onclick="openContactModal()" class="btn-primary px-4 py-2 rounded-full shadow-md text-xs">
+      Contact Desk
+    </button>
+  </div>
+
+  <!-- SIMPLE COOKIE BANNER -->
+  <div id="cookie-banner" class="hidden fixed bottom-5 left-5 right-5 sm:right-auto sm:max-w-lg surface-card rounded-lg p-4 shadow-lg z-40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print">
+    <p class="text-xs theme-text-secondary leading-relaxed">
+      We use essential cookies and local storage for sessions, theme preference, and analytics. Read our <a href="/privacy" onclick="event.preventDefault(); navigate('privacy');" class="underline font-semibold theme-text-primary">Privacy Policy</a>.
+    </p>
+    <div class="flex items-center gap-2 shrink-0">
+      <button type="button" onclick="setCookieConsent('declined')" class="btn-secondary px-3 py-1.5 rounded text-xs">
+        Decline
+      </button>
+      <button type="button" onclick="setCookieConsent('accepted')" class="btn-primary px-3 py-1.5 rounded text-xs">
+        Accept
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toast-container" class="fixed bottom-20 right-5 z-50 space-y-2 max-w-sm w-full pointer-events-none no-print"></div>
+
+  <!-- FOOTER -->
+  <footer class="surface-card border-x-0 border-b-0 w-full text-xs theme-text-secondary mt-auto">
+    <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-10 pb-16 sm:pb-12">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8">
+
+        <!-- Property Identity -->
+        <div class="lg:col-span-5 space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-[#14362b] text-white flex items-center justify-center font-mono font-semibold text-xs tracking-tight rounded shrink-0">
+              GH
+            </div>
+            <div>
+              <span class="text-sm font-bold theme-text-primary block">Grand Horizon Hotel</span>
+              <span class="text-[11px] theme-text-secondary block">420 Bayview Road, Dona Paula, Panaji, Goa 403004, India</span>
+            </div>
+          </div>
+          <p class="leading-relaxed max-w-md">
+            17 oceanfront rooms, villas, and penthouses overlooking the Arabian Sea with live room availability and instant confirmation vouchers.
+          </p>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="lg:col-span-2 space-y-2.5">
+          <h3 class="text-xs font-bold uppercase tracking-wider theme-text-primary">Reservations</h3>
+          <ul class="space-y-2">
+            <li><a href="/" onclick="event.preventDefault(); navigate('landing');" class="footer-link">Home</a></li>
+            <li><a href="/rooms" onclick="event.preventDefault(); navigate('search');" class="footer-link">Rooms &amp; Booking</a></li>
+            <li><a href="/bookings" onclick="event.preventDefault(); navigate('my-bookings');" class="footer-link">My Bookings</a></li>
+            <li><a href="/login" onclick="event.preventDefault(); navigate('login');" class="footer-link">Sign In / Register</a></li>
+          </ul>
+        </div>
+
+        <!-- Policies & Links -->
+        <div class="lg:col-span-2 space-y-2.5">
+          <h3 class="text-xs font-bold uppercase tracking-wider theme-text-primary">Policies</h3>
+          <ul class="space-y-2">
+            <li><a href="/privacy" onclick="event.preventDefault(); navigate('privacy');" class="footer-link">Privacy Policy</a></li>
+            <li><a href="/terms" onclick="event.preventDefault(); navigate('terms');" class="footer-link">Terms &amp; Conditions</a></li>
+          </ul>
+        </div>
+
+        <!-- Front Desk Contact & Hours -->
+        <div class="lg:col-span-3 space-y-2.5">
+          <h3 class="text-xs font-bold uppercase tracking-wider theme-text-primary">Front Desk &amp; Hours</h3>
+          <div class="space-y-1.5 font-mono text-[11px]">
+            <div>Phone: +91 832 245 6780</div>
+            <div>Email: reservations@grandhorizon.in</div>
+            <div>Check-in: 15:00 | Check-out: 11:00</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-8 pt-6 border-t theme-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:pr-52">
+        <div class="text-[11px] font-mono flex flex-wrap items-center gap-2">
+          <span>Rates and policies last updated: November 11, 2026</span>
+          <span id="footer-utm-indicator" class="hidden badge-available px-1.5 py-0.5 rounded text-[10px]"></span>
+        </div>
+        <div class="text-[11px]">
+          Grand Horizon Hotel, Dona Paula, Goa. Simulated sandbox payments only.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
